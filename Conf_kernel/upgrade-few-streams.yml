@@ -1,10 +1,10 @@
 ---
 
 #- hosts: centos-servers
-- hosts: gce
+- hosts: centos7
   vars:
     kernel_ver: 4.19.36
-  remote_user: maxim
+  remote_user: redbull05689
   become: yes
   become_method: sudo
   tasks:
@@ -37,14 +37,16 @@
   - name: copy kernel config file for make
     copy: src=./kernel.config dest=/tmp/linux-{{ kernel_ver }}/.config
 
-  - name: install kernel
+  - name: install kernel and correct grub entry
     shell: "{{ item }}"
     with_items:
-    - make silentoldconfig .config
+    - make oldconfig .config
     - make -j 4 
     - make modules
     - make modules_install
     - make -j 4 install
+    - sed -i 's/saved/0/g' /etc/default/grub
+    - grub2-mkconfig -o /boot/grub2/grub.cfg
     args:
       chdir: /tmp/linux-{{ kernel_ver }}/
 
@@ -59,10 +61,7 @@
     local_action: wait_for host={{ inventory_hostname }} state=started delay=30 timeout=300
     sudo: false
 
-  - name: rerun make install to correct grub entry order
-    shell: make install 
-    args:
-      chdir: /tmp/linux-{{ kernel_ver }}/
+
 
   - name: restart machine
     shell: sleep 2 && shutdown -r +1 "Ansible updates triggered"
@@ -80,3 +79,4 @@
     register: kernel_version
 
   - debug: var=kernel_version.stdout
+
