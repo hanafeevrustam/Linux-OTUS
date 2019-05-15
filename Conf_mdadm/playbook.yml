@@ -1,0 +1,87 @@
+---
+- hosts: otuslinux
+  remote_user: vagrant
+  tasks:
+  - name: install  packages
+    become: yes
+    become_method: sudo
+    yum: 
+      name:
+      - vim
+      - mdadm
+      - smartmontools
+      - hdparm
+      - gdisk
+      - lvm2 
+      - sysstat 
+      - parted 
+
+  - name: Create first partition
+    become: yes
+    become_method: sudo
+    parted:
+      label: gpt
+      state: present
+      device: /dev/sdg
+      number: 1
+      name: p1
+      part_start: 1%
+      part_end: 20%
+      unit: '%'
+
+  - name: Create second partition
+    become: yes
+    become_method: sudo
+    parted:
+      label: gpt
+      state: present
+      device: /dev/sdg
+      number: 2
+      name: p2
+      part_start: 21%
+      part_end: 40%
+      unit: '%'
+
+  - name: Create third partition
+    become: yes
+    become_method: sudo
+    parted:
+      label: gpt
+      state: present
+      device: /dev/sdg
+      number: 3
+      name: p3
+      part_start: 41%
+      part_end: 60%
+      unit: '%'
+  
+  - name: Create fourth partition
+    become: yes
+    become_method: sudo
+    parted:
+      label: gpt
+      state: present
+      device: /dev/sdg
+      number: 4
+      name: p4
+      part_start: 61%
+      part_end: 80%
+      unit: '%'
+
+  - name: Create fifth partition
+    become: yes
+    become_method: sudo
+    parted:
+      label: gpt
+      state: present
+      device: /dev/sdg
+      number: 5
+      name: p5
+      part_start: 81%
+      part_end: 99%
+      unit: '%'
+
+  become: yes
+  become_method: sudo
+  roles:
+    - role: './mrlesmithjr.mdadm'

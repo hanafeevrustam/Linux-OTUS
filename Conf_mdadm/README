@@ -1,0 +1,6 @@
+Start the project by the folowing command:
+vagrant up
+Connect the project by
+vagrant ssh
+Delete virtual machine by
+vagrant destroy -f
