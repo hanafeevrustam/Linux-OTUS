@@ -1,0 +1,43 @@
+---
+# tasks file for deploy_nginx_web
+
+- name: Add epel-release repo
+  yum:
+    name: epel-release
+    state: present
+
+- name: Install Nginx
+  yum:
+    name: nginx
+    state: latest
+
+- name: Replace NGINX config
+  template: 
+    src: templates/nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+
+- name: Add NGINX virtualhost config
+  template:
+    src: templates/vhost.conf.j2
+    dest: /etc/nginx/conf.d/{{ hostname }}.conf
+
+  
+- name: Check NGINX configs
+  shell: "/usr/sbin/nginx -t"
+  register: nginx_config_status
+- name: NGINX test status
+  debug:
+    msg: "{{ nginx_config_status }}"
+- name: NGINX test status
+  debug:
+    msg: "{{ nginx_config_status.rc }}"
+
+- name: Service NGINX restart and enable on boot
+  systemd:
+   name: nginx
+   state: restarted
+   enabled: yes
+   daemon_reload: yes
+  when: nginx_config_status.rc == 0
+  notify:
+    - NGINX reload
