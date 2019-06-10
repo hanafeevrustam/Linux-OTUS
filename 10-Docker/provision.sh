@@ -1,0 +1,1 @@
+cp -R /vagrant/dockerlab/ /home/vagrant/
