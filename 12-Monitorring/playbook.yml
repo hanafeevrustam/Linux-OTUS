@@ -1,0 +1,115 @@
+---
+- hosts: lab12
+  remote_user: vagrant
+  tasks:
+  - name: 1.Check if EPEL repo is already configured.
+    stat: path={{ epel_repofile_path }}
+    register: epel_repofile_result
+  - name: 2.Install EPEL repo.
+    yum:
+      name: "{{ epel_repo_url }}"
+      state: present
+    register: result
+    when: not epel_repofile_result.stat.exists
+ 
+  - name: 3.Import EPEL GPG key.
+    rpm_key:
+      key: "{{ epel_repo_gpg_key_url }}"
+      state: present
+    when: not epel_repofile_result.stat.exists
+
+  - name: install  packages
+    become: yes
+    become_method: sudo
+    tasks:
+  - name: yum check-update
+    shell: yum check-update
+    register: yum_result
+    failed_when: yum_result.rc != 100
+
+  - name: yum clean all
+    shell: yum clean all
+
+  - name: Install system utilities
+    yum: name={{ item }} state=present
+    with_items: 
+    - vim
+    - wget 
+    - net-tools
+    - lsof
+    - bash-completion
+    - atop
+  
+  - name: Configure the Time Zone
+    file:
+    src: /usr/share/zoneinfo/US/Eastern
+    dest: /etc/localtime
+    state: link
+  # Set vm.swappiness to 5 in /etc/sysctl.conf
+  - sysctl: vm.swappiness
+    name:
+    value: 5
+    state: present
+  # Set ip forwarding on in /proc and in the sysctl file and reload if necessary
+  - sysctl: net.ipv4.ip_forward
+    name: 
+    value: 1
+    sysctl_set: yes
+    state: present
+    reload: yes
+  
+  - name: increase default read buffer
+    sysctl: net.core.rmem_default 
+    value: 8388608 
+    sysctl_set: yes 
+    state: present 
+    reload: yes
+
+  - name: increase default write buffer
+    sysctl: net.core.wmem_default
+    value: 8388608
+    sysctl_set: yes 
+    state: present 
+    reload: yes
+
+  - name: increase max read buffer
+    sysctl: net.core.rmem_max 
+    value: 134217728 
+    sysctl_set: yes 
+    state: present 
+    reload: yes
+
+  - name: increase max write buffer
+    sysctl: net.core.wmem_max 
+    value: 134217728
+    sysctl_set: yes 
+    state: present 
+    reload: yes
+
+  - name: increase tcp buffer size
+    sysctl: net.ipv4.tcp_mem 
+    value: '134217728 134217728 134217728'
+    sysctl_set: yes 
+    state: present 
+    reload: yes
+
+  - name: increase tcp read buffer size
+    sysctl: net.ipv4.tcp_rmem
+    value: '4096 277750 134217728'
+    sysctl_set: yes 
+    state: present 
+    reload: yes
+
+  - name: increase tcp write buffer size
+    sysctl: net.ipv4.tcp_wmem
+    value: '4096 277750 134217728'
+    sysctl_set: yes 
+    state: present 
+    reload: yes
+
+  - name: increase maximum interface backlog
+    sysctl: net.core.netdev_max_backlog
+    value: 300000
+    sysctl_set: yes 
+    state: present 
+    reload: yes
