@@ -16,6 +16,6 @@ services:
     cap_add:
         - NET_ADMIN
     volumes:
-        - "freeipa-data:/data"
+        - "./freeipa-data:/data"
 volumes:
   freeipa-data:
