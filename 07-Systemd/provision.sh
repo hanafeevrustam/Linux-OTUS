@@ -1,4 +1,4 @@
-
+sudo yum install epel-release -y && sudo yum install spawn-fcgi php php-cli mod_fcgid httpd vim -y
 
 cat >> /etc/sysconfig/watchlog << EOF
 # Configuration file for my watchdog service
@@ -53,7 +53,7 @@ EOF
 #######
 #2-nd task
 #############
-yum install epel-release -y && yum install spawn-fcgi php php-cli mod_fcgid httpd vim -y
+
 
 sed -i 's/#SOCKET/SOCKET/' /etc/sysconfig/spawn-fcgi
 sed -i 's/#OPTIONS/OPTIONS/' /etc/sysconfig/spawn-fcgi
@@ -85,7 +85,7 @@ systemctl start spawn-fcgi
 #############
 
 
-cat >> /lib/systemd/system/httpd@.service  << EOF
+cat >> /etc/systemd/system/httpd@.service  << EOF
 [Unit]
 Description=The Apache HTTP Server
 After=network.target remote-fs.target nss-lookup.target
@@ -94,15 +94,10 @@ Documentation=man:apachectl(8)
 
 [Service]
 Type=notify
-EnvironmentFile=/etc/sysconfig/httpd.conf-%i
+EnvironmentFile=/etc/sysconfig/httpd-config-%I
 ExecStart=/usr/sbin/httpd $OPTIONS -DFOREGROUND
 ExecReload=/usr/sbin/httpd $OPTIONS -k graceful
 ExecStop=/bin/kill -WINCH ${MAINPID}
-# We want systemd to give httpd some time to finish gracefully, but still want
-# it to kill httpd after TimeoutStopSec if something went wrong during the
-# graceful stop. Normally, Systemd sends SIGTERM signal right after the
-# ExecStop, which would kill httpd. We are sending useless SIGCONT here to give
-# httpd time to finish.
 KillSignal=SIGCONT
 PrivateTmp=true
 
@@ -110,10 +105,18 @@ PrivateTmp=true
 WantedBy=multi-user.target
 EOF
 
+
+cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd-1.conf
+sed  -i 's/Listen 80/Listen 8080/' /etc/httpd/conf/httpd-1.conf
+sed -i 's/"logs\/error_log"/"logs\/error_log-1"/' /etc/httpd/conf/httpd-1.conf
+sed -i 's/"logs\/access_log"/"logs\/access_log-1"/' /etc/httpd/conf/httpd-1.conf
+cp /etc/sysconfig/httpd /etc/sysconfig/httpd-config-1
+sed -i 's/#OPTIONS=/OPTIONS=-f \/etc\/httpd\/conf\/httpd-1.conf/' /etc/sysconfig/httpd-config-1
+
+
+
+systemctl disable httpd
 systemctl daemon-reload 
-cp /etc/httpd/conf/httpd.conf /etc/httpd/conf/httpd.conf-1
-sed  -i 's/Listen 80/Listen 8080/' /etc/httpd/conf/httpd.conf-1
 
-
-systemctl start httpd@-1.service
-systemctl start httpd.service
+systemctl enable --now httpd@1
+#systemctl start httpd@2.service
