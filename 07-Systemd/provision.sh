@@ -46,9 +46,9 @@ Documentation=man:apachectl(8)
 [Service]
 Type=notify
 EnvironmentFile=/etc/sysconfig/httpd-config-%I
-ExecStart=/usr/sbin/httpd $OPTIONS -DFOREGROUND
-ExecReload=/usr/sbin/httpd $OPTIONS -k graceful
-ExecStop=/bin/kill -WINCH ${MAINPID}
+ExecStart=/usr/sbin/httpd \$OPTIONS -DFOREGROUND
+ExecReload=/usr/sbin/httpd \$OPTIONS -k graceful
+ExecStop=/bin/kill -WINCH \${MAINPID}
 KillSignal=SIGCONT
 PrivateTmp=true
 
