@@ -1,5 +1,5 @@
 
-#- hosts: centos-servers
+---
 - hosts: lvm
   remote_user: vagrant
   become: yes
@@ -18,29 +18,32 @@
     shell: "{{ item }}"
     with_items:
       #reduce volume to 8GB
+    - setenforce 0
     - pvcreate /dev/sdb -y
     - vgcreate vg_root /dev/sdb -y
     - lvcreate -n lv_root -l +100%FREE /dev/vg_root -y
     - mkfs.xfs /dev/vg_root/lv_root
     - mount /dev/vg_root/lv_root /mnt
     - xfsdump -J - /dev/VolGroup00/LogVol00 | xfsrestore -J - /mnt
-    - for i in /proc/ /sys/ /dev/ /run/ /boot/; do mount --bind $i /mnt/$i; done
+    - for i in /proc/ /sys/ /dev/ /run/ /boot/;do mount --bind $i /mnt/$i;done
     - chroot /mnt/
     - grub2-mkconfig -o /boot/grub2/grub.cfg
     - cd /boot ; for i in `ls initramfs-*img`; do dracut -v $i `echo $i|sed "s/initramfs-//g;s/.img//g"` --force; done
-
-  - name: Reboot immediately if there was a change.
-    shell: "sleep 5 && reboot"
-    async: 1
-    poll: 0
+    - exit
+    - reboot
+    
+  
+  # - name: Unconditionally reboot the machine with all defaults
+  #   reboot:
+  #     reboot_timeout: 3
   
 
-  - name: Wait for the reboot to complete if there was a change.
+  - name: Wait for the reboot to complete 
     wait_for_connection:
       connect_timeout: 20
       sleep: 5
       delay: 5
-      timeout: 300
+      timeout: 600
     
 
   - name: Continue to reduce xfs after reboot 
