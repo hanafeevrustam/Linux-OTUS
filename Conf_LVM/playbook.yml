@@ -6,6 +6,13 @@
   become_method: sudo
   tasks:
 
+  - name: install  packages
+    become: yes
+    become_method: sudo
+    yum: 
+        name:
+          - vim
+
   - name: Reduce xfs
     shell: "{{ item }}"
     with_items:
