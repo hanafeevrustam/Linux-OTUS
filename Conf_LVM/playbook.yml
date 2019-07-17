@@ -28,6 +28,24 @@
     - chroot /mnt/
     - grub2-mkconfig -o /boot/grub2/grub.cfg
     - cd /boot ; for i in `ls initramfs-*img`; do dracut -v $i `echo $i|sed "s/initramfs-//g;s/.img//g"` --force; done
+
+  - name: Reboot immediately if there was a change.
+    shell: "sleep 5 && reboot"
+    async: 1
+    poll: 0
+  
+
+  - name: Wait for the reboot to complete if there was a change.
+    wait_for_connection:
+      connect_timeout: 20
+      sleep: 5
+      delay: 5
+      timeout: 300
+    
+
+  - name: Continue to reduce xfs after reboot 
+    shell: "{{ item }}"
+    with_items:
     - lvremove /dev/VolGroup00/LogVol00 -y
     - lvcreate -n VolGroup00/LogVol00 -L 8G /dev/VolGroup00 -y
     - mkfs.xfs /dev/VolGroup00/LogVol00 -y
@@ -37,6 +55,7 @@
     - chroot /mnt/
     - grub2-mkconfig -o /boot/grub2/grub.cfg
     - cd /boot ; for i in `ls initramfs-*img`; do dracut -v $i `echo $i|sed "s/initramfs-//g;s/.img//g"` --force; done
+    #make mirror 
     - pvcreate /dev/sdc /dev/sdd -y
     - vgcreate vg_var /dev/sdc /dev/sdd
     - lvcreate -L 950M -m1 -n lv_var vg_var
