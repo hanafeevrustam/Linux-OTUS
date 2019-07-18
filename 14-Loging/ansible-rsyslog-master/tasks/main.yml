@@ -1,0 +1,14 @@
+---
+- name: Install rsyslog
+  yum:
+    name: ['rsyslog']
+    state: latest
+
+- name: Setup rsyslog
+  template: 
+    src: rsyslog.conf.j2 
+    dest: /etc/rsyslog.conf 
+    owner: root 
+    mode: 644
+  notify:
+    - restart rsyslog

@@ -1,0 +1,9 @@
+---
+- hosts: web
+  remote_user: vagrant
+  tasks:
+  
+  become: yes
+  become_method: sudo
+  roles: 
+    - { role: deploy_nginx_web, when: ansible_system == 'Linux' }

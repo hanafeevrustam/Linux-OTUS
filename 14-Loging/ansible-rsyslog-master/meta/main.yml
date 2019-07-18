@@ -1,0 +1,19 @@
+---
+dependencies: []
+
+galaxy_info:
+  author: pabloguerino
+  description: Centralized logging for Centos via rsyslog
+  company: "JadeLabs"
+  license: "license (BSD, MIT)"
+  min_ansible_version: 1.8
+  platforms:
+    - name: Centos
+      versions:
+      - all
+    - name: Centos
+      versions:
+      - all
+  galaxy_tags:
+    - rsyslog
+    - logging

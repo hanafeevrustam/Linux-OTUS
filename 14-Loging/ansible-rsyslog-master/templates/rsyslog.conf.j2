@@ -1,0 +1,66 @@
+#################
+#### MODULES ####
+#################
+
+$ModLoad imuxsock # provides support for local system logging
+$ModLoad imklog   # provides kernel logging support
+
+{% if type == "server" %}
+# provides UDP syslog reception
+$ModLoad imudp
+$UDPServerRun {{ rsyslog_port }}
+
+# provides TCP syslog reception
+$ModLoad imtcp
+$InputTCPServerRun {{ rsyslog_port }}
+{% endif %}
+
+###########################
+#### GLOBAL DIRECTIVES ####
+###########################
+
+$ActionFileDefaultTemplate RSYSLOG_TraditionalFileFormat
+
+$FileOwner {{ rsyslog_owner }}
+$FileGroup {{ rsyslog_group }}
+$FileCreateMode {{ rsyslog_filemode }}
+$DirCreateMode {{ rsyslog_dirmode }}
+$Umask {{ rsyslog_umask }}
+
+$WorkDirectory {{ rsyslog_workdir }}/var/spool/rsyslog
+
+###############
+#### RULES ####
+###############
+
+auth,authpriv.*			/var/log/auth.log
+*.*;auth,authpriv.none		-/var/log/syslog
+#cron.*				/var/log/cron.log
+daemon.*			-/var/log/daemon.log
+kern.*				-/var/log/kern.log
+lpr.*				-/var/log/lpr.log
+mail.*				-/var/log/mail.log
+user.*				-/var/log/user.logs
+
+mail.info			-/var/log/mail.info
+mail.warn			-/var/log/mail.warn
+mail.err			/var/log/mail.err
+
+news.crit			/var/log/news/news.crit
+news.err			/var/log/news/news.err
+news.notice			-/var/log/news/news.notice
+
+*.=debug;\
+	auth,authpriv.none;\
+	news.none;mail.none	-/var/log/debug
+*.=info;*.=notice;*.=warn;\
+	auth,authpriv.none;\
+	cron,daemon.none;\
+	mail,news.none		-/var/log/messages
+
+{% if type == "client" %}
+
+*.*   @{{ rsyslog_master }}:{{ rsyslog_port }}
+
+{% endif %}
+
