@@ -13,6 +13,9 @@ $UDPServerRun {{ rsyslog_port }}
 # provides TCP syslog reception
 $ModLoad imtcp
 $InputTCPServerRun {{ rsyslog_port }}
+
+$template HostAudit, “/var/log/rsyslog/%$YEAR%/%$MONTH%/%$DAY%/%HOSTNAME%_audit.log”
+$template auditFormat, “%msg%\n”  local6.*      ?HostAudit;auditFormat
 {% endif %}
 
 ###########################
@@ -59,6 +62,16 @@ news.notice			-/var/log/news/news.notice
 	mail,news.none		-/var/log/messages
 
 {% if type == "client" %}
+# Add under the modules section
+$ModLoad imfile
+
+
+$InputFileName /var/log/audit/audit.log
+$InputFileTag tag_audit_log:
+$InputFileStateFile audit_log
+$InputFileSeverity info
+$InputFileFacility local6
+$InputRunFileMonitor
 
 *.*   @{{ rsyslog_master }}:{{ rsyslog_port }}
 
