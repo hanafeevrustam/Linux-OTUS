@@ -1,6 +1,9 @@
 #################
 #### MODULES ####
 #################
+{% if type == "client" %}
+$ModLoad imfile
+{% endif %}
 
 $ModLoad imuxsock # provides support for local system logging
 $ModLoad imklog   # provides kernel logging support
@@ -14,8 +17,9 @@ $UDPServerRun {{ rsyslog_port }}
 $ModLoad imtcp
 $InputTCPServerRun {{ rsyslog_port }}
 
-$template HostAudit, “/var/log/rsyslog/%$YEAR%/%$MONTH%/%$DAY%/%HOSTNAME%_audit.log”
-$template auditFormat, “%msg%\n”  local6.*      ?HostAudit;auditFormat
+$template HostAudit, "/var/spool/rsyslog/%$YEAR%/%$MONTH%/%$DAY%/%HOSTNAME%_audit.log"
+$template auditFormat, "%msg%\n" 
+local6.*  ?HostAudit;auditFormat
 {% endif %}
 
 ###########################
@@ -30,7 +34,7 @@ $FileCreateMode {{ rsyslog_filemode }}
 $DirCreateMode {{ rsyslog_dirmode }}
 $Umask {{ rsyslog_umask }}
 
-$WorkDirectory {{ rsyslog_workdir }}/var/spool/rsyslog
+$WorkDirectory {{ rsyslog_workdir }}
 
 ###############
 #### RULES ####
@@ -63,7 +67,7 @@ news.notice			-/var/log/news/news.notice
 
 {% if type == "client" %}
 # Add under the modules section
-$ModLoad imfile
+
 
 
 $InputFileName /var/log/audit/audit.log
