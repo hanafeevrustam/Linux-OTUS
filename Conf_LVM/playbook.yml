@@ -36,7 +36,23 @@
     - vgcreate vg_root /dev/sdb -y
     - lvcreate -n lv_root -l +100%FREE /dev/vg_root -y
     - mkfs.xfs /dev/vg_root/lv_root
-    - mount /dev/vg_root/lv_root /mnt
+    #- mount /dev/vg_root/lv_root /mnt
+  
+  - name: Mount mnt
+    tags:
+         - mount mnt
+    mount:
+      path: /mnt
+      src: /dev/vg_root/lv_root
+      fstype: xfs
+      opts: rw,auto
+      state: present
+
+  - name: Continue reduce xfs
+    tags:
+         - continue reduce
+    shell: "{{ item }}"
+    with_items:     
     - xfsdump -J - /dev/VolGroup00/LogVol00 | xfsrestore -J - /mnt
     - for i in /proc/ /sys/ /dev/ /run/ /boot/;do mount --bind $i /mnt/$i; done
     - chroot /mnt/
