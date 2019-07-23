@@ -1,0 +1,3 @@
+--realm=freeipa.test
+--ds-password=123qwe
+--admin-password=123qwe

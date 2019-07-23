@@ -1,0 +1,21 @@
+version: "3"
+services:
+  freeipa:
+    image: freeipa/freeipa-server
+    hostname: server.freeipa
+    ports:
+        - "443:443"
+        - "389:389"
+        - "636:636"
+        - "123:123"
+        - "88:88"
+        - "53:53/udp"
+        - "88:88/udp"
+        - "464:464"
+        - "464:464/udp"
+    cap_add:
+        - NET_ADMIN
+    volumes:
+        - "./freeipa-data:/data"
+volumes:
+  freeipa-data:
