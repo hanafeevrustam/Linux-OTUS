@@ -1,0 +1,9 @@
+---
+- hosts: centralServer
+  remote_user: vagrant
+  tasks:
+  
+  become: yes
+  become_method: sudo
+  roles: 
+    - { role: geerlingguy.nginx, when: ansible_system == 'Linux' }
