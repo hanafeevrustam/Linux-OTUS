@@ -1,9 +1,0 @@
----
-- hosts: inetrRouter
-  remote_user: vagrant
-  tasks:
-  
-  become: yes
-  become_method: sudo
-  roles: 
-    - { role: fcsonline.ansible-port-knocking, when: ansible_system == 'Linux' }

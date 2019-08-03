@@ -1,4 +1,0 @@
----
-  sequence_timeout: 15
-  command_timeout: 20
-  open_ports: []

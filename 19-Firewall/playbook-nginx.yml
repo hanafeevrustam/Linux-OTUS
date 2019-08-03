@@ -6,4 +6,4 @@
   become: yes
   become_method: sudo
   roles: 
-    - { role: geerlingguy.nginx, when: ansible_system == 'Linux' }
+    - { role: ansible-role-nginx, when: ansible_system == 'Linux' }
