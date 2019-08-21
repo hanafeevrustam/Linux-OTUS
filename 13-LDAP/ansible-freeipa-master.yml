@@ -1,0 +1,4 @@
+- hosts: ipaserver
+  become: true
+  roles:
+     - { role: ansible-ipaserver }

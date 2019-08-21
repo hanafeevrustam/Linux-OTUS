@@ -1,0 +1,3 @@
+[lab13]
+ipaserver ansible_host=192.168.111.44 ansible_port=22 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/ipaserver/virtualbox/private_key
+ipaclient ansible_host=192.168.111.45 ansible_port=22 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/ipaclient/virtualbox/private_key

@@ -1,0 +1,29 @@
+---
+- name: FreeIPA install
+  hosts: ipaclient
+  become: yes
+  tasks:  
+  - name: Set server and generate certs
+    block:
+    - name: Set hostname
+      hostname:
+         name: ipaclient.otus.test
+    - name: Config hosts
+      lineinfile:
+         dest: /etc/hosts
+         line: '{{ item }}'
+      with_items:
+            - '192.168.111.45 ipaclient.otus.test ipaclient'
+            - '192.168.111.44 ipaserver.otus.test ipaserver'
+    - name: Install epel-release
+      yum:
+        name: 
+        - epel-release 
+    - name: Install freeipa-client
+      yum:
+        name: 
+        - freeipa-client
+        state: latest
+    - name: set ipa-client
+      shell: ipa-client-install --domain=otus.test --server=ipaserver.otus.test --realm=OTUS.TEST --principal=admin --password=password --hostname=ipaclient.otus.test --no-ntp  --unattended
+  
