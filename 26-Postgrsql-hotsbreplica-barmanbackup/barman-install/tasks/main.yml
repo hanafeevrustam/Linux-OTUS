@@ -1,0 +1,76 @@
+---
+
+- name: Добваление записей в /etc/hosts
+  blockinfile:
+    path: /etc/hosts
+    block: |
+       {{ master_ip }} {{ master_hostname }}
+       {{ slave_ip }}  {{ slave_hostname }}
+       {{ barman_ip }}  {{ barman_hostname }}
+
+- name: Установка epel-release
+  yum:
+    name: epel-release
+    state: present
+
+- name: Download barman repo-file
+  get_url:
+    url: https://dl.2ndquadrant.com/default/release/get/11/rpm
+    dest: /tmp/install-barman-repo.sh
+    mode: 0550
+
+- name: Setup barman from official repo
+  command: /tmp/install-barman-repo.sh
+  args:
+    creates: /etc/yum.repos.d/2ndquadrant-dl-default-release-pg11.repo
+
+- name: Install barman
+  yum:
+    name: barman
+    state: present
+
+- name: Установке репозитория Postgres
+  yum:
+    name: https://download.postgresql.org/pub/repos/yum/11/redhat/rhel-7-x86_64/pgdg-centos11-11-2.noarch.rpm
+    state: present
+
+- name: Установка postgresql client
+  yum:
+    name: postgresql11
+    state: present
+
+
+- name: Копирование .pgpass
+  template:
+    src: .pgpass.j2
+    dest: /var/lib/barman/.pgpass
+    mode: 0600
+    owner: barman
+    group: barman
+
+- name: Копирование barman.conf
+  template:
+    src: barman.conf.j2
+    dest: /etc/barman.conf
+    mode: 0644
+
+- name: Копирование pg.conf
+  template:
+    src: pg.conf.j2
+    dest: /etc/barman.d/master.local.conf
+    mode: 0644
+
+- name:  Создание слота репликации
+  ignore_errors: yes
+  shell: >
+    barman receive-wal --create-slot {{ master_hostname }} 
+  
+- name:  Старт barman cron
+  ignore_errors: yes
+  shell: >
+    barman cron
+
+- name:  Старт barman switch-wal
+  ignore_errors: yes
+  shell: >
+    barman switch-wal --force --archive {{ master_hostname }}

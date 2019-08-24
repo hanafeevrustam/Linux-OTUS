@@ -35,3 +35,18 @@ could not change directory to "/home/vagrant": Permission denied
            |          |          |             |             | postgres=CTc/postgres
  test      | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 |
 (4 rows)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+https://www.digitalocean.com/community/tutorials/how-to-back-up-restore-and-migrate-postgresql-databases-with-barman-on-centos-7

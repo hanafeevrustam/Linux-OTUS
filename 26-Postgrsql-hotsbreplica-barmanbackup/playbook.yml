@@ -17,3 +17,11 @@
   roles:
    - slave-setup
 
+- name: Настройка barman
+  hosts: barman
+  become: yes
+  roles:
+   - barman-install
+  tags:
+    - barman
+
