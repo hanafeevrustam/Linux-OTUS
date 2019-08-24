@@ -1,0 +1,54 @@
+---
+- name: Копирование postgresql.conf master
+  template:
+    src: postgresql.conf
+    dest: /var/lib/pgsql/11/data/postgresql.conf
+    owner: postgres
+    group: postgres
+    mode: '0600'
+  notify: restart postgres
+
+- name: Создание пользователя для репликации
+  become_user: postgres
+  command: psql postgres -c "CREATE USER {{ repl_user }} WITH REPLICATION PASSWORD '{{ repl_password }}'"
+
+- name: Создание слота репликации
+  become_user: postgres
+  command: psql postgres -c "SELECT * FROM pg_create_physical_replication_slot('{{ replication_slot }}');"
+
+- name: Создание пользователя для barman
+  become_user: postgres
+  command: psql postgres -c "CREATE USER {{ barman_user }} WITH REPLICATION PASSWORD '{{ barman_password }}' ; alter role barman superuser ;"
+
+- name: Копирование pg_hba.conf на master
+  template:
+    src: pg_hba.conf
+    dest: /var/lib/pgsql/11/data/pg_hba.conf
+    owner: postgres
+    group: postgres
+    mode: '0600'
+  notify: restart postgres
+
+- name: Создание БД test
+  become_user: postgres
+  command: psql postgres -c "CREATE DATABASE test ; "
+
+#firewalld doesn't exist on AWS CentOS 7 by default
+- name: Make sure firewalld is installed
+  yum: name=firewalld state=present
+
+
+
+#unless we start firewalld
+- name: Enable and start firewalld
+  service: name=firewalld state=started enabled=yes
+  
+
+- name: Open post for postgresql
+  firewalld:
+    port: 5432/tcp
+    permanent: yes
+    state: enabled
+  notify: reload firewalld
+
+

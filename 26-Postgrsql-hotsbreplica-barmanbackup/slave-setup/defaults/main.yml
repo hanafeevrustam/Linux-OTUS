@@ -1,0 +1,14 @@
+master_ip: 192.168.111.39
+master_hostname: pgmaster
+slave_ip: 192.168.111.40
+slave_hostname: pgslave
+barman_ip: 192.168.111.41
+barman_hostname: pgbarman
+max_wal_senders: 3
+repl_user: replication
+repl_password: 12345
+barman_user: barman
+barman_password: 12345
+replication_slot: slot
+barman_slot: barman
+pgdata: /var/lib/pgsql/11/data/

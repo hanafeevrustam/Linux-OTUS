@@ -1,0 +1,19 @@
+---
+- name: Установка postgres11
+  hosts: pgmaster, pgslave
+  become: yes
+  roles:
+   - postgres-install
+
+- name: Настройка master
+  hosts: pgmaster
+  become: yes
+  roles:
+   - master-setup
+
+- name: Настройка slave
+  hosts: pgslave
+  become: yes
+  roles:
+   - slave-setup
+
