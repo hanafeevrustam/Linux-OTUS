@@ -1,7 +1,7 @@
-[master.local]
+[pgmaster]
 description =  "Backup from pgmaster"
-conninfo = host={{ master_hostname }} user={{ barman_user }} dbname=test
-streaming_conninfo = host={{ master_hostname }} user={{ barman_user }} dbname=test
+conninfo = host={{ master_hostname }} user={{ barman_user }} dbname={{ base }}
+streaming_conninfo = host={{ master_hostname }} user={{ barman_user }} dbname={{ base }}
 backup_method = postgres
 streaming_archiver = on
 slot_name = {{ barman_slot }}
