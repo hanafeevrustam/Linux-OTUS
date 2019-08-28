@@ -1,9 +1,9 @@
-master_ip: 192.168.111.39
+master_ip: 192.168.11.39
 master_hostname: pgmaster
-slave_ip: 192.168.111.40
+slave_ip: 192.168.11.40
 slave_hostname: pgslave
-barman_ip: 192.168.111.38
-allow_subnet: 192.168.111.0
+barman_ip: 192.168.11.38
+allow_subnet: 192.168.11.0
 barman_hostname: barman
 max_wal_senders: 3
 repl_user: replication

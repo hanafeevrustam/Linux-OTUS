@@ -50,3 +50,7 @@ could not change directory to "/home/vagrant": Permission denied
 
 
 https://www.digitalocean.com/community/tutorials/how-to-back-up-restore-and-migrate-postgresql-databases-with-barman-on-centos-7
+
+https://github.com/Cepxio/PgBarman-Tutorial-Series/blob/master/documents/Part1_BarmanViaRsyncSSH.md
+
+https://www.youtube.com/watch?v=03wNXENAbIk&list=PLaFqU3KCWw6JhHBp07QSu9uE8zahhKnTn&index=19
