@@ -57,7 +57,7 @@
 - name: Копирование pg.conf
   template:
     src: pg.conf.j2
-    dest: /etc/barman.d/master.local.conf
+    dest: /etc/barman.d/pgmaster.conf
     mode: 0644
 
 - name:  Создание слота репликации

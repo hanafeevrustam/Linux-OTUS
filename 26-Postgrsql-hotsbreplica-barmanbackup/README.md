@@ -56,3 +56,7 @@ https://github.com/Cepxio/PgBarman-Tutorial-Series/blob/master/documents/Part1_B
 https://www.youtube.com/watch?v=03wNXENAbIk&list=PLaFqU3KCWw6JhHBp07QSu9uE8zahhKnTn&index=19
 
 http://docs.pgbarman.org/release/2.9/#wal-archiving-via-archive_command
+
+http://qaru.site/questions/16088747/postgresql-how-to-take-incremental-backup-with-barman
+
+https://medium.com/@deepakputhraya/postgresql-backup-and-recovery-with-barman-a41c81dd10fd

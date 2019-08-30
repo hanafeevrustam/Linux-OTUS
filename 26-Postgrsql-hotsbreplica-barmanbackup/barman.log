@@ -1,0 +1,199 @@
+[root@barman vagrant]# tail -f /var/log/barman/barman.log 
+2019-08-29 09:56:02,442 [29390] barman.cli DEBUG: Initialised Barman version 2.9 (config: /etc/barman.conf, args: {'format': 'console', 'color': 'auto', 'quiet': 
+True, 'command': 'cron', 'debug': False})
+2019-08-29 09:56:02,512 [29390] barman.backup_executor DEBUG: The default backup strategy for postgres backup_method is: concurrent_backup
+2019-08-29 09:56:02,514 [29390] barman.command_wrappers DEBUG: BarmanSubProcess: ['/usr/bin/python2', '/usr/bin/barman', '-c', '/etc/barman.conf', '-q', 'archive-wal', 'pgmaster']
+2019-08-29 09:56:02,520 [29390] barman.command_wrappers DEBUG: BarmanSubProcess: subprocess started. pid: 29391
+2019-08-29 09:56:02,521 [29390] barman.server DEBUG: Another STREAMING ARCHIVER process is running for server pgmaster
+2019-08-29 09:56:03,027 [29391] barman.config DEBUG: Including configuration file: master.local.conf
+2019-08-29 09:56:03,028 [29391] barman.cli DEBUG: Initialised Barman version 2.9 (config: /etc/barman.conf, args: {'debug': False, 'command': 'archive_wal', 'server_name': 'pgmaster', 'format': 'console', 'color': 'auto', 'config': '/etc/barman.conf', 'quiet': True})
+2019-08-29 09:56:03,095 [29391] barman.backup_executor DEBUG: The default backup strategy for postgres backup_method is: concurrent_backup
+2019-08-29 09:56:03,098 [29391] barman.server DEBUG: Starting archive-wal for server pgmaster
+2019-08-29 09:56:03,100 [29391] barman.wal_archiver INFO: No xlog segments found from streaming for pgmaster.
+2019-08-29 09:56:25,969 [29394] barman.config DEBUG: Including configuration file: master.local.conf
+2019-08-29 09:56:25,970 [29394] barman.cli DEBUG: Initialised Barman version 2.9 (config: /etc/barman.conf, args: {'debug': False, 'command': 'check', 'server_name': ['pgmaster'], 'format': 'console', 'color': 'auto', 'nagios': False, 'quiet': False})
+2019-08-29 09:56:26,041 [29394] barman.backup_executor DEBUG: The default backup strategy for postgres backup_method is: concurrent_backup
+2019-08-29 09:56:26,042 [29394] barman.server DEBUG: Starting check: WAL archive
+2019-08-29 09:56:26,043 [29394] barman.server DEBUG: Starting check: empty incoming directory 
+2019-08-29 09:56:26,043 [29394] barman.server DEBUG: Starting check: empty streaming directory
+2019-08-29 09:56:26,043 [29394] barman.server DEBUG: Starting check: PostgreSQL
+2019-08-29 09:56:26,130 [29394] barman.postgres WARNING: Error retrieving PostgreSQL status: FATAL:  number of requested standby connections exceeds max_wal_senders (currently 3)
+2019-08-29 09:56:26,131 [29394] barman.command_wrappers DEBUG: Command: ['/usr/pgsql-11/bin/pg_receivewal', '--version']
+2019-08-29 09:56:26,147 [29394] barman.command_wrappers DEBUG: Command return code: 0
+2019-08-29 09:56:26,147 [29394] barman.command_wrappers DEBUG: Command stdout: pg_receivewal (PostgreSQL) 11.5
+
+2019-08-29 09:56:26,148 [29394] barman.command_wrappers DEBUG: Command stderr:
+2019-08-29 09:56:26,157 [29394] barman.postgres DEBUG: Error retrieving PostgreSQL version: FATAL:  number of requested standby connections exceeds max_wal_senders (currently 3)
+2019-08-29 09:56:26,158 [29394] barman.command_wrappers DEBUG: Command: ['/usr/pgsql-11/bin/pg_basebackup', '--version']
+2019-08-29 09:56:26,172 [29394] barman.command_wrappers DEBUG: Command return code: 0
+2019-08-29 09:56:26,172 [29394] barman.command_wrappers DEBUG: Command stdout: pg_basebackup (PostgreSQL) 11.5
+
+2019-08-29 09:56:26,173 [29394] barman.command_wrappers DEBUG: Command stderr:
+2019-08-29 09:56:26,180 [29394] barman.postgres DEBUG: Error retrieving PostgreSQL version: FATAL:  number of requested standby connections exceeds max_wal_senders (currently 3)
+2019-08-29 09:56:26,181 [29394] barman.server DEBUG: Check 'PostgreSQL' succeeded for server 'pgmaster'
+2019-08-29 09:56:26,181 [29394] barman.server DEBUG: Starting check: is_superuser
+2019-08-29 09:56:26,182 [29394] barman.server DEBUG: Check 'is_superuser' succeeded for server 'pgmaster'
+2019-08-29 09:56:26,182 [29394] barman.server DEBUG: Starting check: PostgreSQL streaming
+2019-08-29 09:56:26,183 [29394] barman.server ERROR: Check 'PostgreSQL streaming' failed for server 'pgmaster'
+2019-08-29 09:56:26,183 [29394] barman.server DEBUG: Starting check: wal_level
+2019-08-29 09:56:26,184 [29394] barman.server DEBUG: Check 'wal_level' succeeded for server 'pgmaster'
+2019-08-29 09:56:26,184 [29394] barman.server DEBUG: Starting check: replication slot
+2019-08-29 09:56:26,184 [29394] barman.server DEBUG: Check 'replication slot' succeeded for server 'pgmaster'
+2019-08-29 09:56:26,185 [29394] barman.server DEBUG: Starting check: directories
+2019-08-29 09:56:26,185 [29394] barman.server DEBUG: Check 'directories' succeeded for server 'pgmaster'
+2019-08-29 09:56:26,186 [29394] barman.server DEBUG: Starting check: retention policy settings
+2019-08-29 09:56:26,186 [29394] barman.server DEBUG: Check 'retention policy settings' succeeded for server 'pgmaster'
+2019-08-29 09:56:26,187 [29394] barman.server DEBUG: Starting check: backup maximum age
+2019-08-29 09:56:26,187 [29394] barman.server DEBUG: Check 'backup maximum age' succeeded for server 'pgmaster'
+2019-08-29 09:56:26,187 [29394] barman.server DEBUG: Starting check: compression settings
+2019-08-29 09:56:26,188 [29394] barman.server DEBUG: Check 'compression settings' succeeded for server 'pgmaster'
+2019-08-29 09:56:26,189 [29394] barman.server DEBUG: Starting check: failed backups
+2019-08-29 09:56:26,203 [29394] barman.server ERROR: Check 'failed backups' failed for server 'pgmaster'
+2019-08-29 09:56:26,204 [29394] barman.server DEBUG: Starting check: minimum redundancy requirements
+2019-08-29 09:56:26,204 [29394] barman.server DEBUG: Check 'minimum redundancy requirements' succeeded for server 'pgmaster'
+2019-08-29 09:56:26,205 [29394] barman.server DEBUG: Starting check: pg_basebackup
+2019-08-29 09:56:26,205 [29394] barman.server DEBUG: Check 'pg_basebackup' succeeded for server 'pgmaster'
+2019-08-29 09:56:26,206 [29394] barman.server DEBUG: Starting check: pg_basebackup compatible
+2019-08-29 09:56:26,212 [29394] barman.postgres DEBUG: Error retrieving PostgreSQL version: FATAL:  number of requested standby connections exceeds max_wal_senders (currently 3)
+2019-08-29 09:56:26,213 [29394] barman.server ERROR: Check 'pg_basebackup compatible' failed for server 'pgmaster'
+2019-08-29 09:56:26,215 [29394] barman.server DEBUG: Starting check: pg_basebackup supports tablespaces mapping
+2019-08-29 09:56:26,219 [29394] barman.server DEBUG: Check 'pg_basebackup supports tablespaces mapping' succeeded for server 'pgmaster'
+2019-08-29 09:56:26,220 [29394] barman.server DEBUG: Starting check: configuration
+2019-08-29 09:56:26,220 [29394] barman.server DEBUG: Starting check: pg_receivexlog
+2019-08-29 09:56:26,220 [29394] barman.server DEBUG: Check 'pg_receivexlog' succeeded for server 'pgmaster'
+2019-08-29 09:56:26,221 [29394] barman.server DEBUG: Starting check: pg_receivexlog compatible
+2019-08-29 09:56:26,228 [29394] barman.postgres DEBUG: Error retrieving PostgreSQL version: FATAL:  number of requested standby connections exceeds max_wal_senders (currently 3)
+2019-08-29 09:56:26,229 [29394] barman.server ERROR: Check 'pg_receivexlog compatible' failed for server 'pgmaster'
+2019-08-29 09:56:26,229 [29394] barman.server DEBUG: Starting check: receive-wal running
+2019-08-29 09:56:26,229 [29394] barman.server DEBUG: Check 'receive-wal running' succeeded for server 'pgmaster'
+2019-08-29 09:56:26,230 [29394] barman.server DEBUG: Starting check: archiver errors
+2019-08-29 09:56:26,231 [29394] barman.server DEBUG: Check 'archiver errors' succeeded for server 'pgmaster'
+2019-08-29 09:56:38,209 [29397] barman.config DEBUG: Including configuration file: master.local.conf
+2019-08-29 09:56:38,210 [29397] barman.cli DEBUG: Initialised Barman version 2.9 (config: /etc/barman.conf, args: {'debug': False, 'command': 'check', 'server_name': ['pgmaster'], 'format': 'console', 'color': 'auto', 'nagios': False, 'quiet': False})
+2019-08-29 09:56:38,278 [29397] barman.backup_executor DEBUG: The default backup strategy for postgres backup_method is: concurrent_backup
+2019-08-29 09:56:38,278 [29397] barman.server DEBUG: Starting check: WAL archive
+2019-08-29 09:56:38,279 [29397] barman.server DEBUG: Starting check: empty incoming directory
+2019-08-29 09:56:38,280 [29397] barman.server DEBUG: Starting check: empty streaming directory
+2019-08-29 09:56:38,280 [29397] barman.server DEBUG: Starting check: PostgreSQL
+2019-08-29 09:56:38,371 [29397] barman.postgres WARNING: Error retrieving PostgreSQL status: FATAL:  number of requested standby connections exceeds max_wal_senders (currently 3)
+2019-08-29 09:56:38,372 [29397] barman.command_wrappers DEBUG: Command: ['/usr/pgsql-11/bin/pg_receivewal', '--version']
+2019-08-29 09:56:38,387 [29397] barman.command_wrappers DEBUG: Command return code: 0
+2019-08-29 09:56:38,388 [29397] barman.command_wrappers DEBUG: Command stdout: pg_receivewal (PostgreSQL) 11.5
+
+2019-08-29 09:56:38,388 [29397] barman.command_wrappers DEBUG: Command stderr:
+2019-08-29 09:56:38,396 [29397] barman.postgres DEBUG: Error retrieving PostgreSQL version: FATAL:  number of requested standby connections exceeds max_wal_senders (currently 3)
+2019-08-29 09:56:38,397 [29397] barman.command_wrappers DEBUG: Command: ['/usr/pgsql-11/bin/pg_basebackup', '--version']
+2019-08-29 09:56:38,411 [29397] barman.command_wrappers DEBUG: Command return code: 0
+2019-08-29 09:56:38,412 [29397] barman.command_wrappers DEBUG: Command stdout: pg_basebackup (PostgreSQL) 11.5
+
+2019-08-29 09:56:38,412 [29397] barman.command_wrappers DEBUG: Command stderr:
+2019-08-29 09:56:38,421 [29397] barman.postgres DEBUG: Error retrieving PostgreSQL version: FATAL:  number of requested standby connections exceeds max_wal_senders (currently 3)
+2019-08-29 09:56:38,422 [29397] barman.server DEBUG: Check 'PostgreSQL' succeeded for server 'pgmaster'
+2019-08-29 09:56:38,422 [29397] barman.server DEBUG: Starting check: is_superuser
+2019-08-29 09:56:38,423 [29397] barman.server DEBUG: Check 'is_superuser' succeeded for server 'pgmaster'
+2019-08-29 09:56:38,424 [29397] barman.server DEBUG: Starting check: PostgreSQL streaming
+2019-08-29 09:56:38,424 [29397] barman.server ERROR: Check 'PostgreSQL streaming' failed for server 'pgmaster'
+2019-08-29 09:56:38,425 [29397] barman.server DEBUG: Starting check: wal_level
+2019-08-29 09:56:38,425 [29397] barman.server DEBUG: Check 'wal_level' succeeded for server 'pgmaster'
+2019-08-29 09:56:38,425 [29397] barman.server DEBUG: Starting check: replication slot
+2019-08-29 09:56:38,426 [29397] barman.server DEBUG: Check 'replication slot' succeeded for server 'pgmaster'
+2019-08-29 09:56:38,426 [29397] barman.server DEBUG: Starting check: directories
+2019-08-29 09:56:38,427 [29397] barman.server DEBUG: Check 'directories' succeeded for server 'pgmaster'
+2019-08-29 09:56:38,427 [29397] barman.server DEBUG: Starting check: retention policy settings
+2019-08-29 09:56:38,427 [29397] barman.server DEBUG: Check 'retention policy settings' succeeded for server 'pgmaster'
+2019-08-29 09:56:38,428 [29397] barman.server DEBUG: Starting check: backup maximum age
+2019-08-29 09:56:38,428 [29397] barman.server DEBUG: Check 'backup maximum age' succeeded for server 'pgmaster'
+2019-08-29 09:56:38,428 [29397] barman.server DEBUG: Starting check: compression settings
+2019-08-29 09:56:38,429 [29397] barman.server DEBUG: Check 'compression settings' succeeded for server 'pgmaster'
+2019-08-29 09:56:38,430 [29397] barman.server DEBUG: Starting check: failed backups
+2019-08-29 09:56:38,447 [29397] barman.server ERROR: Check 'failed backups' failed for server 'pgmaster'
+2019-08-29 09:56:38,448 [29397] barman.server DEBUG: Starting check: minimum redundancy requirements
+2019-08-29 09:56:38,448 [29397] barman.server DEBUG: Check 'minimum redundancy requirements' succeeded for server 'pgmaster'
+2019-08-29 09:56:38,449 [29397] barman.server DEBUG: Starting check: pg_basebackup
+2019-08-29 09:56:38,449 [29397] barman.server DEBUG: Check 'pg_basebackup' succeeded for server 'pgmaster'
+2019-08-29 09:56:38,450 [29397] barman.server DEBUG: Starting check: pg_basebackup compatible
+2019-08-29 09:56:38,457 [29397] barman.postgres DEBUG: Error retrieving PostgreSQL version: FATAL:  number of requested standby connections exceeds max_wal_senders (currently 3)
+2019-08-29 09:56:38,458 [29397] barman.server ERROR: Check 'pg_basebackup compatible' failed for server 'pgmaster'
+2019-08-29 09:56:38,460 [29397] barman.server DEBUG: Starting check: pg_basebackup supports tablespaces mapping
+2019-08-29 09:56:38,464 [29397] barman.server DEBUG: Check 'pg_basebackup supports tablespaces mapping' succeeded for server 'pgmaster'
+2019-08-29 09:56:38,464 [29397] barman.server DEBUG: Starting check: configuration
+2019-08-29 09:56:38,465 [29397] barman.server DEBUG: Starting check: pg_receivexlog
+2019-08-29 09:56:38,465 [29397] barman.server DEBUG: Check 'pg_receivexlog' succeeded for server 'pgmaster'
+2019-08-29 09:56:38,465 [29397] barman.server DEBUG: Starting check: pg_receivexlog compatible
+2019-08-29 09:56:38,473 [29397] barman.postgres DEBUG: Error retrieving PostgreSQL version: FATAL:  number of requested standby connections exceeds max_wal_senders (currently 3)
+2019-08-29 09:56:38,473 [29397] barman.server ERROR: Check 'pg_receivexlog compatible' failed for server 'pgmaster'
+2019-08-29 09:56:38,474 [29397] barman.server DEBUG: Starting check: receive-wal running
+2019-08-29 09:56:38,474 [29397] barman.server DEBUG: Check 'receive-wal running' succeeded for server 'pgmaster'
+2019-08-29 09:56:38,475 [29397] barman.server DEBUG: Starting check: archiver errors
+2019-08-29 09:56:38,475 [29397] barman.server DEBUG: Check 'archiver errors' succeeded for server 'pgmaster'
+2019-08-29 09:56:42,297 [29400] barman.config DEBUG: Including configuration file: master.local.conf
+2019-08-29 09:56:42,298 [29400] barman.cli DEBUG: Initialised Barman version 2.9 (config: /etc/barman.conf, args: {'reuse_backup': None, 'jobs': None, 'server_name': ['pgmaster'], 'format': 'console', 'color': 'auto', 'quiet': False, 'retry_times': None, 'command': 'backup', 'retry_sleep': None, 'debug': False})
+2019-08-29 09:56:42,372 [29400] barman.backup_executor DEBUG: The default backup strategy for postgres backup_method is: concurrent_backup
+2019-08-29 09:56:42,374 [29400] barman.server DEBUG: Starting check: WAL archive
+2019-08-29 09:56:42,375 [29400] barman.server DEBUG: Starting check: empty incoming directory
+2019-08-29 09:56:42,376 [29400] barman.server DEBUG: Starting check: empty streaming directory
+2019-08-29 09:56:42,376 [29400] barman.server DEBUG: Starting check: PostgreSQL
+2019-08-29 09:56:42,498 [29400] barman.postgres WARNING: Error retrieving PostgreSQL status: FATAL:  number of requested standby connections exceeds max_wal_senders (currently 3)
+2019-08-29 09:56:42,499 [29400] barman.command_wrappers DEBUG: Command: ['/usr/pgsql-11/bin/pg_receivewal', '--version']
+2019-08-29 09:56:42,514 [29400] barman.command_wrappers DEBUG: Command return code: 0
+2019-08-29 09:56:42,515 [29400] barman.command_wrappers DEBUG: Command stdout: pg_receivewal (PostgreSQL) 11.5
+
+2019-08-29 09:56:42,516 [29400] barman.command_wrappers DEBUG: Command stderr:
+2019-08-29 09:56:42,523 [29400] barman.postgres DEBUG: Error retrieving PostgreSQL version: FATAL:  number of requested standby connections exceeds max_wal_senders (currently 3)
+2019-08-29 09:56:42,524 [29400] barman.command_wrappers DEBUG: Command: ['/usr/pgsql-11/bin/pg_basebackup', '--version']
+2019-08-29 09:56:42,538 [29400] barman.command_wrappers DEBUG: Command return code: 0
+2019-08-29 09:56:42,539 [29400] barman.command_wrappers DEBUG: Command stdout: pg_basebackup (PostgreSQL) 11.5
+
+2019-08-29 09:56:42,539 [29400] barman.command_wrappers DEBUG: Command stderr:
+2019-08-29 09:56:42,546 [29400] barman.postgres DEBUG: Error retrieving PostgreSQL version: FATAL:  number of requested standby connections exceeds max_wal_senders (currently 3)
+2019-08-29 09:56:42,547 [29400] barman.server DEBUG: Check 'PostgreSQL' succeeded for server 'pgmaster'
+2019-08-29 09:56:42,547 [29400] barman.server DEBUG: Starting check: is_superuser
+2019-08-29 09:56:42,548 [29400] barman.server DEBUG: Check 'is_superuser' succeeded for server 'pgmaster'
+2019-08-29 09:56:42,548 [29400] barman.server DEBUG: Starting check: PostgreSQL streaming
+2019-08-29 09:56:42,548 [29400] barman.server ERROR: Check 'PostgreSQL streaming' failed for server 'pgmaster'
+2019-08-29 09:56:42,549 [29400] barman.server DEBUG: Starting check: wal_level
+2019-08-29 09:56:42,549 [29400] barman.server DEBUG: Check 'wal_level' succeeded for server 'pgmaster'
+2019-08-29 09:56:42,549 [29400] barman.server DEBUG: Starting check: replication slot
+2019-08-29 09:56:42,550 [29400] barman.server DEBUG: Check 'replication slot' succeeded for server 'pgmaster'
+2019-08-29 09:56:42,550 [29400] barman.server DEBUG: Starting check: directories
+2019-08-29 09:56:42,551 [29400] barman.server DEBUG: Check 'directories' succeeded for server 'pgmaster'
+2019-08-29 09:56:42,551 [29400] barman.server DEBUG: Starting check: retention policy settings
+2019-08-29 09:56:42,551 [29400] barman.server DEBUG: Check 'retention policy settings' succeeded for server 'pgmaster'
+2019-08-29 09:56:42,552 [29400] barman.server DEBUG: Starting check: backup maximum age
+2019-08-29 09:56:42,552 [29400] barman.server DEBUG: Check 'backup maximum age' succeeded for server 'pgmaster'
+2019-08-29 09:56:42,552 [29400] barman.server DEBUG: Starting check: compression settings
+2019-08-29 09:56:42,553 [29400] barman.server DEBUG: Check 'compression settings' succeeded for server 'pgmaster'
+2019-08-29 09:56:42,553 [29400] barman.server DEBUG: Starting check: failed backups
+2019-08-29 09:56:42,569 [29400] barman.server INFO: Ignoring failed check 'failed backups' for server 'pgmaster'
+2019-08-29 09:56:42,569 [29400] barman.server DEBUG: Starting check: minimum redundancy requirements
+2019-08-29 09:56:42,569 [29400] barman.server DEBUG: Check 'minimum redundancy requirements' succeeded for server 'pgmaster'
+2019-08-29 09:56:42,570 [29400] barman.server DEBUG: Starting check: pg_basebackup
+2019-08-29 09:56:42,570 [29400] barman.server DEBUG: Check 'pg_basebackup' succeeded for server 'pgmaster'
+2019-08-29 09:56:42,570 [29400] barman.server DEBUG: Starting check: pg_basebackup compatible
+2019-08-29 09:56:42,577 [29400] barman.postgres DEBUG: Error retrieving PostgreSQL version: FATAL:  number of requested standby connections exceeds max_wal_senders (currently 3)
+2019-08-29 09:56:42,578 [29400] barman.server ERROR: Check 'pg_basebackup compatible' failed for server 'pgmaster'
+2019-08-29 09:56:42,581 [29400] barman.server DEBUG: Starting check: pg_basebackup supports tablespaces mapping
+2019-08-29 09:56:42,584 [29400] barman.server DEBUG: Check 'pg_basebackup supports tablespaces mapping' succeeded for server 'pgmaster'
+2019-08-29 09:56:42,585 [29400] barman.server DEBUG: Starting check: configuration
+2019-08-29 09:56:42,585 [29400] barman.server DEBUG: Starting check: pg_receivexlog
+2019-08-29 09:56:42,585 [29400] barman.server DEBUG: Check 'pg_receivexlog' succeeded for server 'pgmaster'
+2019-08-29 09:56:42,586 [29400] barman.server DEBUG: Starting check: pg_receivexlog compatible
+2019-08-29 09:56:42,592 [29400] barman.postgres DEBUG: Error retrieving PostgreSQL version: FATAL:  number of requested standby connections exceeds max_wal_senders (currently 3)
+2019-08-29 09:56:42,592 [29400] barman.server ERROR: Check 'pg_receivexlog compatible' failed for server 'pgmaster'
+2019-08-29 09:56:42,593 [29400] barman.server DEBUG: Starting check: receive-wal running
+2019-08-29 09:56:42,593 [29400] barman.server DEBUG: Check 'receive-wal running' succeeded for server 'pgmaster'
+2019-08-29 09:56:42,594 [29400] barman.server DEBUG: Starting check: archiver errors
+2019-08-29 09:56:42,594 [29400] barman.server DEBUG: Check 'archiver errors' succeeded for server 'pgmaster'
+2019-08-29 09:56:42,597 [29400] barman.server ERROR: Impossible to start the backup. Check the log for more details, or run 'barman check pgmaster'
+2019-08-29 09:57:02,241 [29406] barman.config DEBUG: Including configuration file: master.local.conf
+2019-08-29 09:57:02,242 [29406] barman.cli DEBUG: Initialised Barman version 2.9 (config: /etc/barman.conf, args: {'format': 'console', 'color': 'auto', 'quiet': 
+True, 'command': 'cron', 'debug': False})
+2019-08-29 09:57:02,312 [29406] barman.backup_executor DEBUG: The default backup strategy for postgres backup_method is: concurrent_backup
+2019-08-29 09:57:02,315 [29406] barman.command_wrappers DEBUG: BarmanSubProcess: ['/usr/bin/python2', '/usr/bin/barman', '-c', '/etc/barman.conf', '-q', 'archive-wal', 'pgmaster']
+2019-08-29 09:57:02,320 [29406] barman.command_wrappers DEBUG: BarmanSubProcess: subprocess started. pid: 29407
+2019-08-29 09:57:02,321 [29406] barman.server DEBUG: Another STREAMING ARCHIVER process is running for server pgmaster
+2019-08-29 09:57:02,861 [29407] barman.config DEBUG: Including configuration file: master.local.conf
+2019-08-29 09:57:02,862 [29407] barman.cli DEBUG: Initialised Barman version 2.9 (config: /etc/barman.conf, args: {'debug': False, 'command': 'archive_wal', 'server_name': 'pgmaster', 'format': 'console', 'color': 'auto', 'config': '/etc/barman.conf', 'quiet': True})
+2019-08-29 09:57:02,932 [29407] barman.backup_executor DEBUG: The default backup strategy for postgres backup_method is: concurrent_backup
+2019-08-29 09:57:02,935 [29407] barman.server DEBUG: Starting archive-wal for server pgmaster
+2019-08-29 09:57:02,938 [29407] barman.wal_archiver INFO: No xlog segments found from streaming for pgmaster.
