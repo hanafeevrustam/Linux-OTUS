@@ -1,4 +1,4 @@
 [lab26]
-  pgmaster ansible_host=127.0.0.1 ansible_port=2222 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/pgmaster/virtualbox/private_key
-  pgslave ansible_host=127.0.0.1 ansible_port=2200 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/pgslave/virtualbox/private_key
-  barman ansible_host=127.0.0.1 ansible_port=2201 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/barman/virtualbox/private_key
+pgmaster ansible_host=127.0.0.1 ansible_port=2222 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/pgmaster/virtualbox/private_key
+pgslave ansible_host=127.0.0.1 ansible_port=2200 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/pgslave/virtualbox/private_key
+barman ansible_host=127.0.0.1 ansible_port=2201 ansible_user=vagrant ansible_ssh_private_key_file=.vagrant/machines/barman/virtualbox/private_key

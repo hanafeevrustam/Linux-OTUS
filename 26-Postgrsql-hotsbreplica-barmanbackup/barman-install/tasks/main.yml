@@ -1,4 +1,8 @@
 ---
+- name: Put SELinux in permissive mode, logging actions that would be blocked.
+  selinux:
+    policy: targeted
+    state: permissive
 
 - name: Добваление записей в /etc/hosts
   blockinfile:
@@ -60,6 +64,36 @@
     dest: /etc/barman.d/pgmaster.conf
     mode: 0644
 
+- name: Create SSH key for barman user
+  user:
+    name: barman
+    home: /var/lib/barman
+    generate_ssh_key: yes
+    ssh_key_bits: 1024
+    ssh_key_file: .ssh/id_rsa
+
+#Без обмена ключами не работает streaming protocol. Хоть про ключи в документашке ничего и не сказано
+
+- name:  Создание authorized_keys на мастере
+  ignore_errors: yes
+  shell: >
+    ssh pgmaster "sudo touch /var/lib/pgsql/.ssh/authorized_keys"
+
+- name:  Создание authorized_keys на барман
+  ignore_errors: yes
+  shell: >
+    sudo touch /var/lib/barman/.ssh/authorized_keys
+
+- name:  Добавление в authorized_keys ключа на мастере
+  ignore_errors: yes
+  shell: >
+    sudo cat /var/lib/barman/.ssh/id_rsa.pub | ssh pgmaster 'sudo tee /var/lib/pgsql/.ssh/authorized_keys > /dev/null'
+
+- name:  Добавление в authorized_keys ключа на бармен
+  ignore_errors: yes
+  shell: >
+    ssh vagrant@pgmaster "sudo cat /var/lib/pgsql/.ssh/id_rsa.pub" | sudo tee /var/lib/barman/.ssh/authorized_keys > /dev/null
+
 - name:  Создание слота репликации
   ignore_errors: yes
   shell: >
@@ -74,3 +108,4 @@
   ignore_errors: yes
   shell: >
     barman switch-wal --force --archive {{ master_hostname }}
+

@@ -1,4 +1,9 @@
 ---
+- name: Put SELinux in permissive mode, logging actions that would be blocked.
+  selinux:
+    policy: targeted
+    state: permissive
+    
 - name: Копирование postgresql.conf master
   template:
     src: postgresql.conf
@@ -18,7 +23,7 @@
 
 - name: Создание пользователя для barman
   become_user: postgres
-  command: psql postgres -c "CREATE USER {{ barman_user }} WITH REPLICATION PASSWORD '{{ barman_password }}' ; alter role barman superuser ;"
+  command: psql postgres -c "CREATE USER {{ barman_user }} WITH REPLICATION PASSWORD '{{ barman_password }}' ; alter role barman superuser ; "
 
 - name: Копирование pg_hba.conf на master
   template:
@@ -51,4 +56,11 @@
     state: enabled
   notify: reload firewalld
 
+- name: Create SSH key for postgres user
+  user:
+    name: postgres
+    home: /var/lib/pgsql
+    generate_ssh_key: yes
+    ssh_key_bits: 1024
+    ssh_key_file: .ssh/id_rsa
 

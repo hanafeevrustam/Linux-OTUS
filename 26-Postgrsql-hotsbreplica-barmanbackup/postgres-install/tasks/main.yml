@@ -1,7 +1,8 @@
 ---
-- name: Отключение SELinux
+- name: Put SELinux in permissive mode, logging actions that would be blocked.
   selinux:
-    state: disabled
+    policy: targeted
+    state: permissive
 
 - name: install epel-release
   yum:
