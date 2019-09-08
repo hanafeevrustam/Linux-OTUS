@@ -1,8 +1,13 @@
+ssh  vagrant@pgmaster " sudo touch /var/lib/pgsql/.ssh/authorized_keys"
 
+sudo touch /var/lib/barman/.ssh/authorized_keys
 
 sudo cat /var/lib/barman/.ssh/id_rsa.pub | ssh pgmaster 'sudo tee /var/lib/pgsql/.ssh/authorized_keys > /dev/null'
 
-ssh vagrant@pgmaster "sudo cat /var/lib/pgsql/.ssh/id_rsa.pub" | sudo tee /var/lib/barman/.ssh/authorized_keys > /dev/null
+ssh vagrant@barman "sudo cat /var/lib/pgsql/.ssh/id_rsa.pub" | << sudo cat /var/lib/barman/.ssh/authorized_keys
 
 
 
+---------------
+
+sudo scp /var/lib/pgsql/.ssh/id_rsa.pub vagrant@pgmaster:/var/lib/barman/.ssh/authorized_keys

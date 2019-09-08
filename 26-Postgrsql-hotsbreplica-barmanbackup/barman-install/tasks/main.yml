@@ -74,25 +74,47 @@
 
 #Без обмена ключами не работает streaming protocol. Хоть про ключи в документашке ничего и не сказано
 
-- name:  Создание authorized_keys на мастере
-  ignore_errors: yes
-  shell: >
-    ssh pgmaster "sudo touch /var/lib/pgsql/.ssh/authorized_keys"
+- name: make direcotry on barman
+  file:
+    path: "/var/lib/barman/.ssh"
+    state: directory
 
 - name:  Создание authorized_keys на барман
-  ignore_errors: yes
-  shell: >
-    sudo touch /var/lib/barman/.ssh/authorized_keys
+  file:
+    path: /var/lib/barman/.ssh/authorized_keys
+    state: touch
 
-- name:  Добавление в authorized_keys ключа на мастере
-  ignore_errors: yes
-  shell: >
-    sudo cat /var/lib/barman/.ssh/id_rsa.pub | ssh pgmaster 'sudo tee /var/lib/pgsql/.ssh/authorized_keys > /dev/null'
+- name: make direcotry on pgmaster
+  hosts: pgmaster
+  become: true
+  file:
+    path: "/var/lib/pgsql/.ssh"
+    state: directory
 
-- name:  Добавление в authorized_keys ключа на бармен
-  ignore_errors: yes
-  shell: >
-    ssh vagrant@pgmaster "sudo cat /var/lib/pgsql/.ssh/id_rsa.pub" | sudo tee /var/lib/barman/.ssh/authorized_keys > /dev/null
+- name: Create authorized_keys on pgmaster
+  hosts: pgmaster
+  become: true
+  file:
+    path: /var/lib/pgsql/.ssh/authorized_keys
+    state: touch
+
+
+- name: put pubkey
+  become: true
+  synchronize:
+    src: "/var/lib/barman/.ssh/id_rsa.pub"
+    dest: "/var/lib/pgsql/.ssh/authorized_keys"
+  delegate_to: pgmaster
+
+# - name:  Добавление в authorized_keys ключа на мастере
+#   ignore_errors: yes
+#   shell: >
+#     sudo cat /var/lib/barman/.ssh/id_rsa.pub | ssh pgmaster 'sudo tee /var/lib/pgsql/.ssh/authorized_keys > /dev/null'
+
+# - name:  Добавление в authorized_keys ключа на бармен
+#   ignore_errors: yes
+#   shell: >
+#     ssh vagrant@pgmaster "sudo cat /var/lib/pgsql/.ssh/id_rsa.pub" | sudo tee /var/lib/barman/.ssh/authorized_keys > /dev/null
 
 - name:  Создание слота репликации
   ignore_errors: yes
@@ -108,4 +130,8 @@
   ignore_errors: yes
   shell: >
     barman switch-wal --force --archive {{ master_hostname }}
+
+
+
+
 
