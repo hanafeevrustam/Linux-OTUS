@@ -84,27 +84,16 @@
     path: /var/lib/barman/.ssh/authorized_keys
     state: touch
 
-- name: make direcotry on pgmaster
-  hosts: pgmaster
-  become: true
-  file:
-    path: "/var/lib/pgsql/.ssh"
-    state: directory
-
-- name: Create authorized_keys on pgmaster
-  hosts: pgmaster
-  become: true
-  file:
-    path: /var/lib/pgsql/.ssh/authorized_keys
-    state: touch
-
 
 - name: put pubkey
-  become: true
+  become_method: su
   synchronize:
     src: "/var/lib/barman/.ssh/id_rsa.pub"
     dest: "/var/lib/pgsql/.ssh/authorized_keys"
-  delegate_to: pgmaster
+#     rsync_opts:
+# #       - "-avz --exclude-from={{proj_dir}}/files/rsync_exclude"
+#       - '-e "ssh -i /home/vagrant/.ssh/id_rsa -l vagrant"'
+  delegate_to: "{{ master_ip }}"
 
 # - name:  Добавление в authorized_keys ключа на мастере
 #   ignore_errors: yes

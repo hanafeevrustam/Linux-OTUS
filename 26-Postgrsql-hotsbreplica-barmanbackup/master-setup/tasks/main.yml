@@ -64,3 +64,8 @@
     ssh_key_bits: 1024
     ssh_key_file: .ssh/id_rsa
 
+- name: Create authorized_keys on pgmaster
+  file:
+    path: /var/lib/pgsql/.ssh/authorized_keys
+    mode: '0600'
+    state: touch
