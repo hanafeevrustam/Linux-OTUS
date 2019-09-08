@@ -86,7 +86,6 @@
 
 
 - name: put pubkey
-  become_method: su
   synchronize:
     src: "/var/lib/barman/.ssh/id_rsa.pub"
     dest: "/var/lib/pgsql/.ssh/authorized_keys"
