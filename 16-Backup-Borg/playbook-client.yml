@@ -1,0 +1,23 @@
+- hosts: client
+  vars:
+    borg_client_backup_list:
+      - name: app_uploads
+        repo: borg@server:app_uploads
+        paths:
+          - /etc
+        cron:
+          minute: '0'
+          hour: '*'
+          day: '*'
+          month: '*'
+          weekday: '*'
+        ssh:
+          key_path: /keys/id_rsa_client_a
+        prune:
+          keep_hourly: 5
+          keep_daily: 5
+          keep_weekly: 2
+          keep_monthly: 2
+  roles:
+    - role: ansible-role-borg-client-master
+      become: true
