@@ -1,0 +1,8 @@
+---
+
+- name: restart filebeat
+  become: true
+  service:
+    name: filebeat
+    state: restarted
+  ignore_errors: true
