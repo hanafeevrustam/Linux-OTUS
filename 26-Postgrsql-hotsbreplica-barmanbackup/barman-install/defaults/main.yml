@@ -14,3 +14,4 @@ replication_slot: slot
 barman_slot: barman
 pgdata: /var/lib/pgsql/11/data/
 base: test
+key: /vagrant/keys/id_rsa

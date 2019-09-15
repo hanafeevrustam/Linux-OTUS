@@ -49,23 +49,39 @@
   service: name=firewalld state=started enabled=yes
   
 
-- name: Open post for postgresql
+- name: Open port for postgresql
   firewalld:
     port: 5432/tcp
     permanent: yes
     state: enabled
   notify: reload firewalld
 
-- name: Create SSH key for postgres user
-  user:
-    name: postgres
-    home: /var/lib/pgsql
-    generate_ssh_key: yes
-    ssh_key_bits: 1024
-    ssh_key_file: .ssh/id_rsa
-
-- name: Create authorized_keys on pgmaster
+- name: make direcotry on pgmaster
   file:
-    path: /var/lib/pgsql/.ssh/authorized_keys
-    mode: '0600'
-    state: touch
+    path: "/var/lib/pgsql/.ssh"
+    state: directory
+
+- name: Set authorized key taken from file on pgmaster
+  authorized_key:
+     user: postgres
+     state: present
+     key: "{{ lookup('file', item) }}"
+  with_fileglob: /vagrant/*.pub
+
+- name: copy ssh key
+  sudo: yes
+  copy: 
+    src: /vagrant/keys/id_rsa
+    dest: /var/lib/pgsql/.ssh/
+    owner: postgres
+    group: postgres
+    mode: 0600
+
+
+- name: mod ssh config
+  lineinfile:
+    path: /var/lib/pgsql/.ssh/config
+    line: StrictHostKeyChecking=no
+    create: yes
+    owner: postgres
+    group: postgres

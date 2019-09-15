@@ -64,13 +64,13 @@
     dest: /etc/barman.d/pgmaster.conf
     mode: 0644
 
-- name: Create SSH key for barman user
-  user:
-    name: barman
-    home: /var/lib/barman
-    generate_ssh_key: yes
-    ssh_key_bits: 1024
-    ssh_key_file: .ssh/id_rsa
+# - name: Create SSH key for barman user
+#   user:
+#     name: barman
+#     home: /var/lib/barman
+#     generate_ssh_key: yes
+#     ssh_key_bits: 1024
+#     ssh_key_file: .ssh/id_rsa
 
 #Без обмена ключами не работает streaming protocol. Хоть про ключи в документашке ничего и не сказано
 
@@ -79,30 +79,30 @@
     path: "/var/lib/barman/.ssh"
     state: directory
 
-- name:  Создание authorized_keys на барман
-  file:
-    path: /var/lib/barman/.ssh/authorized_keys
-    state: touch
+
+- name: Set authorized key taken from file on barman
+  authorized_key:
+     user: barman
+     state: present
+     key: "{{ lookup('file', item) }}"
+  with_fileglob: /vagrant/*.pub
+
+- name: mod ssh config on barman
+  lineinfile:
+    path: /var/lib/pgsql/.ssh/config
+    line: StrictHostKeyChecking=no
+    create: yes
+    owner: barman
+    group: barman
 
 
-- name: put pubkey
-  synchronize:
-    src: "/var/lib/barman/.ssh/id_rsa.pub"
-    dest: "/var/lib/pgsql/.ssh/authorized_keys"
-#     rsync_opts:
-# #       - "-avz --exclude-from={{proj_dir}}/files/rsync_exclude"
-#       - '-e "ssh -i /home/vagrant/.ssh/id_rsa -l vagrant"'
-  delegate_to: "{{ master_ip }}"
 
-# - name:  Добавление в authorized_keys ключа на мастере
-#   ignore_errors: yes
-#   shell: >
-#     sudo cat /var/lib/barman/.ssh/id_rsa.pub | ssh pgmaster 'sudo tee /var/lib/pgsql/.ssh/authorized_keys > /dev/null'
+- name: Downloading  key on barman
+  fetch: 
+    dest: /var/lib/barman/.ssh/id_rsa 
+    src: /vagrant/keys/id_rsa flat=yes
 
-# - name:  Добавление в authorized_keys ключа на бармен
-#   ignore_errors: yes
-#   shell: >
-#     ssh vagrant@pgmaster "sudo cat /var/lib/pgsql/.ssh/id_rsa.pub" | sudo tee /var/lib/barman/.ssh/authorized_keys > /dev/null
+
 
 - name:  Создание слота репликации
   ignore_errors: yes
