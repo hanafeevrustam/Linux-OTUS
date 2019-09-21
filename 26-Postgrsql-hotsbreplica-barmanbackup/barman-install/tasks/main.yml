@@ -89,18 +89,28 @@
 
 - name: mod ssh config on barman
   lineinfile:
-    path: /var/lib/pgsql/.ssh/config
+    path: /var/lib/barman/.ssh/config
     line: StrictHostKeyChecking=no
     create: yes
     owner: barman
     group: barman
 
 
+- name: mod ssh config 2
+  lineinfile:
+    path: /var/lib/barman/.ssh/config
+    line: UserKnownHostsFile=/dev/null
+    owner: barman
+    group: barman
 
-- name: Downloading  key on barman
-  fetch: 
-    dest: /var/lib/barman/.ssh/id_rsa 
-    src: /vagrant/keys/id_rsa flat=yes
+- name: copy ssh key on barman
+  sudo: yes
+  copy: 
+    src: ./keys/id_rsa.pub
+    dest: /var/lib/barman/.ssh/authorized_keys
+    owner: barman
+    group: barman
+    mode: 0600
 
 
 

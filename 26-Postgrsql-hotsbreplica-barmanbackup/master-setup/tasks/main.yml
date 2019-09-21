@@ -4,6 +4,51 @@
     policy: targeted
     state: permissive
     
+- name: make direcotry on pgmaster
+  file:
+    path: "/var/lib/pgsql/.ssh"
+    state: directory
+
+- name: Set authorized key taken from file on pgmaster
+  authorized_key:
+     user: postgres
+     state: present
+     key: "{{ lookup('file', item) }}"
+  with_fileglob: /vagrant/*.pub
+
+# - name: Downloading public key on pgmaster
+#   copy: 
+#     src: ./keys/id_rsa.pub
+#     dest: /var/lib/postgres/.ssh/
+#     owner: postgres
+#     group: postgres
+#     mode: 0600
+
+- name: copy ssh key
+  sudo: yes
+  copy: 
+    src: ./keys/id_rsa
+    dest: /var/lib/pgsql/.ssh/
+    owner: postgres
+    group: postgres
+    mode: 0600
+
+
+- name: mod ssh config 1
+  lineinfile:
+    path: /var/lib/pgsql/.ssh/config
+    line: StrictHostKeyChecking=no
+    create: yes
+    owner: postgres
+    group: postgres
+
+- name: mod ssh config 2
+  lineinfile:
+    path: /var/lib/pgsql/.ssh/config
+    line: UserKnownHostsFile=/dev/null
+    owner: postgres
+    group: postgres
+
 - name: Копирование postgresql.conf master
   template:
     src: postgresql.conf
@@ -55,33 +100,3 @@
     permanent: yes
     state: enabled
   notify: reload firewalld
-
-- name: make direcotry on pgmaster
-  file:
-    path: "/var/lib/pgsql/.ssh"
-    state: directory
-
-- name: Set authorized key taken from file on pgmaster
-  authorized_key:
-     user: postgres
-     state: present
-     key: "{{ lookup('file', item) }}"
-  with_fileglob: /vagrant/*.pub
-
-- name: copy ssh key
-  sudo: yes
-  copy: 
-    src: /vagrant/keys/id_rsa
-    dest: /var/lib/pgsql/.ssh/
-    owner: postgres
-    group: postgres
-    mode: 0600
-
-
-- name: mod ssh config
-  lineinfile:
-    path: /var/lib/pgsql/.ssh/config
-    line: StrictHostKeyChecking=no
-    create: yes
-    owner: postgres
-    group: postgres

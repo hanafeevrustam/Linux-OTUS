@@ -4,18 +4,24 @@
   become: yes
   roles:
    - postgres-install
+  tags:
+   - pginstall
 
 - name: Настройка master
   hosts: pgmaster
   become: yes
   roles:
    - master-setup
+  tags:
+    - pgsetup
 
 - name: Настройка slave
   hosts: pgslave
   become: yes
   roles:
    - slave-setup
+  tags:
+    - slavesetup
 
 - name: Настройка barman
   hosts: barman
