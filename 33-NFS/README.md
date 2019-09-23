@@ -5,7 +5,7 @@
 Vagrant stand NFS или SAMBA
 NFS или SAMBA на выбор:
 
-- vagrant up должен поднимать 2 виртуалки: сервер и клиент
+- vagrant up поднимет 2 виртуалки: сервер и клиент
 - sudo ansible-playbook ./provisioning/playbook.yml -i ./provisioning/inventory.yml раскатывает роли на виртуалки
 - на сервер должна быть расшарена директория
 - на клиента она должна автоматически монтироваться при старте (fstab или autofs)
