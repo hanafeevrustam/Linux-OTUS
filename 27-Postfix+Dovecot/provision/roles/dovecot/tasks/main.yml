@@ -1,0 +1,19 @@
+---
+# tasks file for dovecot
+- name: Install dovecot
+  yum: 
+    name: dovecot
+    state: present
+
+- name: Start service dovecot
+  systemd: 
+    name: dovecot
+    state: started
+    enabled: true
+
+- name: Configure dovecot
+  template: 
+    src: dovecot.conf.j2
+    dest: /etc/dovecot/dovecot.conf
+  notify: 
+    - restart dovecot

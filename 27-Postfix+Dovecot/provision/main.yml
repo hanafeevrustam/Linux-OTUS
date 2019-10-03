@@ -1,0 +1,12 @@
+---
+- hosts: server
+  become: true
+  tasks:
+  - name: Setup default time zone Moscow
+    file: 
+      src: /usr/share/zoneinfo/Europe/Moscow 
+      dest: /etc/localtime
+      state: link
+  roles: 
+  - postfix-server
+  - dovecot

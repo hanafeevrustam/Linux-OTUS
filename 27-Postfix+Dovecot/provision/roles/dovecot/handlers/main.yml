@@ -1,0 +1,6 @@
+---
+# handlers file for dovecot
+- name: restart dovecot
+  systemd: 
+    name: dovecot
+    state: restarted

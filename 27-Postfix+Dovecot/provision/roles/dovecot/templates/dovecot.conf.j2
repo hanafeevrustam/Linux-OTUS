@@ -1,0 +1,41 @@
+ 
+# Hostname: server.otus.local
+disable_plaintext_auth = no 
+auth_mechanisms = plain login
+first_valid_uid = 1000
+mail_location = maildir:~/Maildir
+mbox_write_locks = fcntl
+namespace inbox {
+  inbox = yes
+  location = 
+  mailbox Drafts {
+    special_use = \Drafts
+  }
+  mailbox Junk {
+    special_use = \Junk
+  }
+  mailbox Sent {
+    special_use = \Sent
+  }
+  mailbox "Sent Messages" {
+    special_use = \Sent
+  }
+  mailbox Trash {
+    special_use = \Trash
+  }
+  prefix = 
+}
+passdb {
+  driver = pam
+}
+service auth {
+  unix_listener /var/spool/postfix/private/auth {
+    group = postfix
+    mode = 0660
+    user = postfix
+  }
+}
+ssl = no
+userdb {
+  driver = passwd
+}
