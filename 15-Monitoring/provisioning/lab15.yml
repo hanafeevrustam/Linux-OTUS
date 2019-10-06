@@ -1,0 +1,9 @@
+---
+- hosts: lab15
+  become: yes
+
+  roles:
+    - mysql
+    - zabbix-server
+    - zabbix-agent
+    - grafana
