@@ -3,6 +3,7 @@
 - hosts: web
   become: yes
   roles:
+    - { role: CentOS_Srv }
     - { role: nginx }
     - { role: journaldClient }
     - { role: rsyslogClient }
@@ -10,11 +11,12 @@
 - hosts: log 
   become: yes
   roles:
+    - { role: CentOS_Srv }
     - { role: ntpd }
     - { role: journaldSrv }
     - { role: rsyslogSrv }
 # Servers of EFK stack
-- hosts: logweb
-  become: yes
-  roles:
-    - { role: ansible-efk-master }
+# - hosts: logweb
+#   become: yes
+#   roles:
+#     - { role: ansible-efk-master }
