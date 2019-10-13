@@ -4,27 +4,18 @@
   #  shell: timedatectl set-timezone Europe/Moscow
 
 - name: Install packages
-  yum: 
-    name: "{{ item }}" 
-    state: latest
+  yum: pkg={{ item }} state=latest
   with_items:
-    - "{{ ntp }}"
+    - ntp
 
 - name: Replaced ntp.conf
-  copy: 
-    src: ntp.conf 
-    dest: /etc/
+  copy: src=ntp.conf dest=/etc/
 
 - name: Ensure ntpd is running and enabled
-  service: 
-    name: ntpd 
-    state: restarted 
-    enabled: yes
+  service: name=ntpd state=restarted enabled=yes
 
 - name: Replaced firewall.conf
-  copy: 
-    src: firewall.conf 
-    dest: /etc/
+  copy: src=firewall.conf dest=/etc/
   
 - name: Loaded nftables rules
   shell: /sbin/iptables-restore < /etc/firewall.conf && echo "/sbin/iptables-restore < /etc/firewall.conf" >> /etc/rc.d/rc.local && chmod +x /etc/rc.d/rc.local

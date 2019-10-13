@@ -1,87 +1,63 @@
 # -*- mode: ruby -*-
-# vim: set ft=ruby :
-home = ENV['HOME']
+# vi: set ft=ruby :
 
-MACHINES = {
-  :web => {
-        :box_name => "centos/7",
-        :ip_addr => '192.168.11.39'
-        
-        
-  },
+Vagrant.configure(2) do |config|
+  config.vm.box = "centos/7"
+
+  config.vm.provider "virtualbox" do |v|
+      v.memory = 1024
+      v.cpus = 1
+  end
+  config.vm.provision "shell", inline: "mkdir /root/.ssh/ && cat /vagrant/ansible.pub >> /root/.ssh/authorized_keys && cat /vagrant/ansible.pub >> /home/vagrant/.ssh/authorized_keys"
+  config.ssh.username = "vagrant"
+
+  config.vm.define "logsrv" do |logsrv|
+    logsrv.vm.provider :virtualbox do |vb|
+      vb.customize ["modifyvm", :id, "--memory", "256"]
+    end
+    logsrv.vm.network "private_network", ip: '192.168.168.111', adapter: 2, netmask: "255.255.255.192", virtualbox__intnet: "sw01"
+    logsrv.vm.network :forwarded_port, guest: 22, host: 2201, id: "ssh"
+    logsrv.vm.hostname = "logsrv"
+  end
+
+  config.vm.define "logweb" do |logweb|
+    logweb.vm.provider :virtualbox do |vb|
+      vb.customize ["modifyvm", :id, "--memory", "2048"]
+    end
+    logweb.vm.network "private_network", ip: '192.168.168.110', adapter: 2, netmask: "255.255.255.192", virtualbox__intnet: "sw01"
+    logweb.vm.network :forwarded_port, guest: 22, host: 2202, id: "ssh"
+    logweb.vm.hostname = "logweb"
+  end
+
+  config.vm.define "web01" do |web01|
+    web01.vm.provider :virtualbox do |vb|
+      vb.customize ["modifyvm", :id, "--memory", "256"]
+    end
+    web01.vm.network "private_network", ip: '192.168.168.100', adapter: 2, netmask: "255.255.255.192", virtualbox__intnet: "sw01"
+    web01.vm.network :forwarded_port, guest: 22, host: 2203, id: "ssh"
+    web01.vm.hostname = "web01"
+  end
+
   
-  :log => {
-        :box_name => "centos/7",
-        :ip_addr => '192.168.11.38'
-        
-        
-  },
-}
+#  config.vm.define "logweb2" do |logweb2|
+#    logweb2.vm.provider :virtualbox do |vb|
+#      vb.customize ["modifyvm", :id, "--memory", "2048"]
+#    end
+#    logweb2.vm.network "private_network", ip: '192.168.168.112', adapter: 2, netmask: "255.255.255.192", virtualbox__intnet: "sw01"
+#    logweb2.vm.hostname = "logweb2"
+#  end
 
-Vagrant.configure("2") do |config|
+  config.vm.provision "ansible" do |ansible|
+    ansible.verbose = "vvv"
+    ansible.playbook = "Playbook.yml"
+    # Ansible_ssh_user
+    ansible.force_remote_user = "vagrant"
+    ansible.become = "true"
+    ansible.inventory_path = "./hosts"
+    ansible.raw_arguments = [
+      "--connection=paramiko",
+      "--private-key=./ansible"
+    ]
+  end
 
-  MACHINES.each do |boxname, boxconfig|
-
-      config.vm.define boxname do |box|
-
-          box.vm.box = boxconfig[:box_name]
-          box.vm.host_name = boxname.to_s
-          # box.vm.network "forwarded_port", guest: 8080, host: 8080
-          # box.vm.network "forwarded_port", guest: 8443, host: 8443
-          # box.vm.network "forwarded_port", guest: 8022, host: 8022
-
-          #box.vm.network "forwarded_port", guest: 3260, host: 3260+offset
-
-          #box.vm.network "public_network", use_dhcp_assigned_default_route: true
-          box.vm.network "private_network", ip: boxconfig[:ip_addr]
-
-          box.vm.provider :virtualbox do |vb|
-          vb.customize ["modifyvm", :id, "--memory", "4096"]
-          vb.customize ["modifyvm", :id, "--cpus", "4"]
-        #   vb.customize ["storagectl", :id, "--name", "SATA", "--add", "sata" ]
-          vb.name = boxname.to_s
-
-        #   boxconfig[:disks].each do |dname, dconf|
-        #       unless File.exist?(dconf[:dfile])
-        #         vb.customize ['createhd', '--filename', dconf[:dfile], '--variant', 'Fixed', '--size', dconf[:size]]
-        #       end
-        #       vb.customize ['storageattach', :id,  '--storagectl', 'SATA', '--port', dconf[:port], '--device', 0, '--type', 'hdd', '--medium', dconf[:dfile]]
-        # end
-          end
-          config.vm.provision "shell", inline: "mkdir /root/.ssh/ && cat /vagrant/ansible.pub >> /root/.ssh/authorized_keys && cat /vagrant/ansible.pub >> /home/vagrant/.ssh/authorized_keys"
-          config.ssh.username = "vagrant"
-
-      case boxname.to_s
-      when "web"
-        box.vm.provision "shell", run: "always", inline: <<-SHELL
-         
-          mkdir ~/weblab
-          echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCW+VHI6di+7jZZhnYiCUciVO3oCSJ1xkV+8TINsNy1Itek0BUnorH+Mh6wC5eHoFVsid39v5A5ypzYZvJWhjwu4LNBJFroNhPnpmSBoA7Xk9U+slDI1A6pImop3qQbncMbYMdeyK5yoQO9bgJKDoQG7ak99qp24C4koFHGXO9Bejhenkkct2j0iTQreRyv2y3oSeOvsvQcBFuYS3H0FPhTUII8dx+/tjOTYFaxiA+EkWhuyXfhnrUd60BN5+ajqEgtv4CYZm2MBzDWu3Sor142Ms3R/FbwF1MJKd7JHOzJcTARfnpBqBZi+Or+l9+Pdl8yzxbxO0+9yaj7MGP9eyVT" >> /home/vagrant/.ssh/authorized_keys
-          cp /vagrant/id_rsa /home/vagrant/.ssh/
-          chown vagrant:vagrant /home/vagrant/.ssh/id_rsa 
-          chmod 0600 /home/vagrant/.ssh/id_rsa
-          echo "192.168.11.38  log" >> /etc/hosts
-          echo "192.168.11.39  web" >> /etc/hosts
-          echo "vm.swappiness=10" >> /etc/sysctl.conf
-          sysctl -p
-          SHELL
-          
-        
-        when "log"
-           box.vm.provision "shell", run: "always", inline: <<-SHELL
-             
-             mkdir ~/log
-             echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCW+VHI6di+7jZZhnYiCUciVO3oCSJ1xkV+8TINsNy1Itek0BUnorH+Mh6wC5eHoFVsid39v5A5ypzYZvJWhjwu4LNBJFroNhPnpmSBoA7Xk9U+slDI1A6pImop3qQbncMbYMdeyK5yoQO9bgJKDoQG7ak99qp24C4koFHGXO9Bejhenkkct2j0iTQreRyv2y3oSeOvsvQcBFuYS3H0FPhTUII8dx+/tjOTYFaxiA+EkWhuyXfhnrUd60BN5+ajqEgtv4CYZm2MBzDWu3Sor142Ms3R/FbwF1MJKd7JHOzJcTARfnpBqBZi+Or+l9+Pdl8yzxbxO0+9yaj7MGP9eyVT" >> /home/vagrant/.ssh/authorized_keys
-
-              cp /vagrant/id_rsa /home/vagrant/.ssh/
-              chown vagrant:vagrant /home/vagrant/.ssh/id_rsa 
-              chmod 0600 /home/vagrant/.ssh/id_rsa
-              echo "192.168.11.38  log" >> /etc/hosts
-              echo "192.168.11.39  web" >> /etc/hosts
-             SHELL
-        #config.vm.provision "shell", path: "./provision.sh"
-        end
-
-      end
-   end
 end
